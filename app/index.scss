@@ -1,0 +1,156 @@
+$primary-color: #F0B90B;
+$optimism-red: #FF0420;
+$usdc-color: #3E73C4;
+$usdt-color: #6AAD97;
+$dai-color: #F5AC37;
+$background-color: #0D0B1C;
+$font-stack: Poppins,Helvetica,Arial,sans-serif;
+
+html {
+  font-family: $font-stack;
+  color: white;
+  background-color: $background-color;
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+.title{
+  font-family: $font-stack;
+  color: white;
+  @apply text-2xl;
+}
+.card-header{
+  @apply text-2xl;
+  text-transform: capitalize;
+}
+.amount-bar{
+  @apply h-8;
+  background-color: white; //You should never see this color
+  display: flex;;
+
+}
+.amount-bar div {
+  @apply h-full;
+}
+.amount-bar:first-child{
+  @apply rounded-t-lg;
+}
+.amount-bar:last-child{
+  @apply rounded-b-lg;
+}
+
+.container{
+  @apply space-y-8;
+}
+.button{
+
+}
+.button{
+  text-transform: uppercase;
+  @apply font-bold;
+  @apply text-lg;
+  text-align: center;
+}
+
+.contained-button{
+  text-align: center;
+  color: black;
+  background-color: $primary-color;
+  text-transform: capitalize;
+  @apply text-black;
+  @apply font-bold;
+  @apply rounded-2xl;
+  @apply px-16;
+  @apply py-4;
+  @apply hover:bg-amber-500;
+  @apply hover:text-black;
+  @apply hover:shadow-lg;
+  @apply transition-all;
+  @apply duration-200;
+  @apply ease-in-out;
+  @apply focus:outline-none;
+  @apply focus:ring-2;
+  @apply focus:ring-amber-600;
+  @apply focus:ring-opacity-50;
+  @apply focus:ring-offset-2;
+  @apply focus:ring-offset-white;
+  //@apply focus:ring-offset-opacity-50;
+}
+.outlined-button{
+
+}
+.card {
+  //display: flex;
+  /*margin: 0 auto;*/
+  padding: 1.5rem;
+  border-radius: 20px;
+  flex-shrink: 0;
+  background-color: #001332;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.debug-red{
+  @apply bg-red-500;
+}
+.optimism-color{
+  color: $optimism-red;
+}
+.usdc-background-color{
+  background-color: $usdc-color;
+}
+.usdt-background-color{
+  background-color: $usdt-color;
+}
+.dai-background-color{
+  background-color: $dai-color;
+}
+
+
+.chat-notification-logo-wrapper {
+  flex-shrink: 0;
+}
+.chat-notification-logo {
+  height: 3rem;
+  width: 3rem;
+}
+.chat-notification-content {
+  margin-left: 1.5rem;
+  padding-top: 0.25rem;
+}
+.chat-notification-title {
+  color: #1a202c;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+.chat-notification-message {
+  color: #718096;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.material-icons {
+  color: white;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}

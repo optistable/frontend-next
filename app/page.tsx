@@ -1,113 +1,216 @@
-import Image from 'next/image'
+import {AddressLike} from "ethers";
+import {ReactElement} from "react";
+import {generatePolicy, getRandomBigInt} from "@/app/generators";
+import USDCIcon from "../public/usdc.svg";
+import USDTIcon from "../public/usdt.svg";
+import DAIIcon from "../public/dai-logo.svg";
+import MaterialSyncAltIcon from "../public/material-sync-alt.svg";
+import Image from "next/image";
+
+export type Policy = {
+    address: AddressLike,
+    insuredTokenAddress: AddressLike,
+    collateralTokenAddress: AddressLike,
+    insuredAmount: bigint,
+    collateralAmount: bigint
+}
+
+export type OracleCommittee = {
+    startingBlock: bigint,
+    endingBlock: bigint,
+    providers: AddressLike[],
+    minProvidersForQuorum: number,
+    providersReportingDepegs: number,
+}
+
+export type DataProvider = {
+    symbol: string,
+    address: AddressLike,
+    lastBlockNum: bigint,
+    depegTolerance: bigint,
+    minBlocksToSwitchStatus: number,
+    switchStatusCounter: number, //the current number of sequential depegs
+    onChain: boolean,
+    decimals: number,
+    stableValue: bigint,
+    lastObservation: bigint,
+    oracleType: string //this is actually bytes32
+}
+
+type Stablecoin = {
+    address: string,
+    symbol: string,
+    name: string,
+    icon: (height: number, width: number) => ReactElement,
+    color: string
+}
+
+// TODO: Make this a part of the theme
+export const OPTIMISM_RED = "#FF0420";
+
+export const stablecoins: {
+    [key: string]: Stablecoin
+} = {
+    "0x222e9a549274B796715a4af8a9BB96bC6EFCd13A": {
+        address: "0x222e9a549274B796715a4af8a9BB96bC6EFCd13A", symbol: "USDC", name: "US Dollar Coin", icon: (height, width) =>
+            <Image src={USDCIcon} height={height} width={width} alt={"USDC"}/>, color: "#3E73C4"
+    },
+    "0xECF58c7323C56290157675777d30A1E223db451a": {
+        address: "0xECF58c7323C56290157675777d30A1E223db451a", symbol: "USDT", name: "Tether USD", icon: (height, width) =>
+            <Image src={USDTIcon} height={height} width={width} alt={"USDT"}/>, color: "#6AAD97"
+    },
+    "0xC3c8f830DedF94D185250bA5ac348aC1455a0520": {
+        address: "0xC3c8f830DedF94D185250bA5ac348aC1455a0520", symbol: "DAI", name: "I don't know what DAI stands for", icon: (height, width) =>
+            <Image src={DAIIcon} height={height} width={width} alt={"DAI"}/>, color: "#F5AC37"
+    },
+    // GUSD: {address: "0x00000", symbol: "GUSD", name: "Gemini USD", icon: GUSDIcon},
+    // USDP: {address: "0x00000", symbol: "USDP", name: "Paxos USD", icon: USDPIcon},
+    // TUSD: {address: "0x00000", symbol: "TUSD", name: "True USD", icon: TUSDIcon},
+    // USDD: {address: "0x00000", symbol: "USDD", name: "Decentralized USD", icon: USDDIcon},
+    // BUSD: {address: "0x00000", symbol: "BUSD", name: "Binance USD", icon: BUSDIcon},
+    // SEUR: {address: "0x00000", symbol: "SEUR", name: "Statis EUR", icon: SEURIcon},
+}
+const symbolToStablecoin: {
+    [key: string]: Stablecoin
+} = {
+    "USDC": stablecoins["0x222e9a549274B796715a4af8a9BB96bC6EFCd13A"],
+    "USDT": stablecoins["0xECF58c7323C56290157675777d30A1E223db451a"],
+    "DAI": stablecoins["0xC3c8f830DedF94D185250bA5ac348aC1455a0520"]
+}
+
+const amounts = () => {
+
+
+    const values = Object.values(stablecoins).map((stablecoin, index) => {
+        return {
+            symbol: stablecoin.symbol,
+            color: stablecoin.color,
+            amount: getRandomBigInt(7)
+        }
+    })
+    const totalValue = values.reduce((acc, curr) => acc + curr.amount, BigInt(0))
+
+    values.sort((a, b) => 0);
+
+
+    let rem = 100n
+    const elems = values.map((v, i) => {
+        const widthVal = (v.amount * 100n / totalValue)
+        const width = i == values.length - 1 ? `${rem}%` : `${widthVal}%`
+        rem -= widthVal
+        return <div style={{
+            backgroundColor: v.color,
+            width,
+        }}></div>
+    })
+    console.log(elems)
+    return elems
+
+}
+
+const CardWithHeader: React.FC<{
+    headerText: string,
+    children: ReactElement[]
+}> = ({headerText, children}) => {
+    return <div className={"card max-w-lg space-y-4"}>
+        <p className={"card-header"}>{headerText}</p>
+        {...children}
+    </div>
+}
+
+const InsuranceCollateralCard: React.FC<{
+    insured: boolean,
+    policy?: Policy
+}> = ({insured, policy}) => {
+    return <CardWithHeader headerText={insured ? "Total Insured" : "Total Collateral"}>
+        <div className={"space-y-4"}>
+            <div className={"amount-bar"}>
+                {...amounts()}
+            </div>
+            <p className={"text-4xl text-center"}>
+                ${getRandomBigInt(7).toLocaleString()}
+            </p>
+        </div>
+        <div className={"flex"} style={{justifyContent: "center"}}>
+            <p className={"flex text-center contained-button text-2xl w-fit"}>
+                {insured ? "Get Insured" : "Provide Collateral"}
+            </p>
+        </div>
+    </CardWithHeader>
+}
+
+
+const PolicyCard: React.FC<{
+    policy: Policy
+}> = ({policy}) => {
+    return <div className={"card max-w-md justify-center space-y-4"} key={policy.address.toString()}>
+        <div className={"flex justify-center space-x-4"}>
+            <div>
+                {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
+            </div>
+            <div className={"flex items-center"} style={{color: "#FFF"}}>
+                <Image src={MaterialSyncAltIcon} height={80} color={"white"} className={"material-icons"}/>
+            </div>
+            <div>
+                {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
+            </div>
+        </div>
+        <p className={"text-4xl text-center"}>
+            ${policy.insuredAmount.toLocaleString()}
+        </p>
+        <p className={"text-xl text-center"}>
+            0/5 Depegged
+        </p>
+        {/*<Grid container item xs={12}>*/}
+        {/*    <Grid item container xs={5} height={"80"} justifyContent={"center"}>*/}
+        {/*    </Grid>*/}
+        {/*    <Grid item container xs={2} height={"80"} alignItems={"center"}>*/}
+        {/*        <CompareArrowsIcon sx={{width: "100%", height: 80}}/>*/}
+        {/*    </Grid>*/}
+        {/*    <Grid item container xs={5} height={"80"} justifyContent={"center"}>*/}
+        {/*    </Grid>*/}
+        {/*</Grid>*/}
+        {/*        <Container>*/}
+        {/*            <Typography variant={"h4"} textAlign={"center"}>*/}
+        {/*                {`$${policy.insuredAmount.toLocaleString()}`}*/}
+        {/*            </Typography>*/}
+        {/*            <Typography variant={"h5"} textAlign={"center"}>*/}
+        {/*                {`insured`}*/}
+        {/*            </Typography>*/}
+        {/*        </Container>*/}
+        {/*    </Stack>*/}
+        {/*</CardContent>*/}
+    </div>
+}
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    return (
+        <div className={"grid grid-cols-6 gap-8"}>
+            <div className={"card col-span-1 mt-8 space-y-8"}>
+                <div className={"contained-button"}>
+                    Dashboard
+                </div>
+                <div className={"contained-button"}>
+                    Pools
+                </div>
+            </div>
+            <div className={"col-span-5 space-y-8"}>
+                <p className={"text-5xl mt-16"}>Dashboard</p>
+                <div className={"grid grid-cols-2 gap-8"}>
+                    <InsuranceCollateralCard insured/>
+                    <InsuranceCollateralCard insured={false}/>
+                    <InsuranceCollateralCard insured/>
+                    <InsuranceCollateralCard insured={false}/>
+                </div>
+                <p className={"text-5xl mt-16"}>Active Policies</p>
+                <div className={"grid grid-cols-3"}>
+                    <PolicyCard policy={generatePolicy()}/>
+                    <PolicyCard policy={generatePolicy()}/>
+                    <PolicyCard policy={generatePolicy()}/>
+                </div>
+
+            </div>
         </div>
-      </div>
+    )
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
 }
