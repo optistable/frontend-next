@@ -17,6 +17,7 @@ import CarmenLogo from "../public/carmen-sandiego.png";
 import RiddlerLogo from "../public/riddler.png";
 import GarfieldLogo from "../public/garfield.png";
 import HyperlaneLogo from "../public/hyperlane.png";
+
 export type Policy = {
     address: AddressLike,
     insuredTokenAddress: AddressLike,
@@ -83,7 +84,8 @@ export const dataProviderToTitle = (symbol: string): ReactElement => {
         case "chainlink-price-feed":
             return <Link href={"https://docs.chain.link/data-feeds"}>Chainlink Data Feeds</Link>
         case "chainlink-base-ccip-price-feed":
-            return <div className={"flex"}><Link href={"https://docs.chain.link/ccip"}>Chainlink CCIP</Link> <Link href={"https://docs.base.org/"}> on Base </Link></div>
+            return <div className={"flex"}><Link href={"https://docs.chain.link/ccip"}>Chainlink CCIP</Link> <Link
+                href={"https://docs.base.org/"}> on Base </Link></div>
         case "coingecko":
             return <Link href={"https://www.coingecko.com/en"}>Coingecko</Link>
         case "hyperlane":
@@ -128,8 +130,6 @@ const symbolToStablecoin: {
 }
 
 const amounts = () => {
-
-
     const values = Object.values(stablecoins).map((stablecoin, index) => {
         return {
             symbol: stablecoin.symbol,
@@ -193,44 +193,26 @@ const PolicyCard: React.FC<{
     policy: Policy
 }> = ({policy}) => {
     return <Link href={`/policy/${policy.address.toString()}`}>
-    <div className={"card max-w-md justify-center space-y-4"} key={policy.address.toString()}>
-        <div className={"flex justify-center space-x-4"}>
-            <div>
-                {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
+        <div className={"card max-w-md justify-center space-y-4"} key={policy.address.toString()}>
+            <div className={"flex justify-center space-x-4"}>
+                <div>
+                    {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
+                </div>
+                <div className={"flex items-center"} style={{color: "#FFF"}}>
+                    <Image src={MaterialSyncAltIcon} alt="sync" height={80} color={"white"}
+                           className={"material-icons"}/>
+                </div>
+                <div>
+                    {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
+                </div>
             </div>
-            <div className={"flex items-center"} style={{color: "#FFF"}}>
-                <Image src={MaterialSyncAltIcon} alt="sync" height={80} color={"white"} className={"material-icons"}/>
-            </div>
-            <div>
-                {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
-            </div>
+            <p className={"text-4xl text-center"}>
+                ${policy.insuredAmount.toLocaleString()}
+            </p>
+            <p className={"text-xl text-center"}>
+                0/5 Depegged
+            </p>
         </div>
-        <p className={"text-4xl text-center"}>
-            ${policy.insuredAmount.toLocaleString()}
-        </p>
-        <p className={"text-xl text-center"}>
-            0/5 Depegged
-        </p>
-        {/*<Grid container item xs={12}>*/}
-        {/*    <Grid item container xs={5} height={"80"} justifyContent={"center"}>*/}
-        {/*    </Grid>*/}
-        {/*    <Grid item container xs={2} height={"80"} alignItems={"center"}>*/}
-        {/*        <CompareArrowsIcon sx={{width: "100%", height: 80}}/>*/}
-        {/*    </Grid>*/}
-        {/*    <Grid item container xs={5} height={"80"} justifyContent={"center"}>*/}
-        {/*    </Grid>*/}
-        {/*</Grid>*/}
-        {/*        <Container>*/}
-        {/*            <Typography variant={"h4"} textAlign={"center"}>*/}
-        {/*                {`$${policy.insuredAmount.toLocaleString()}`}*/}
-        {/*            </Typography>*/}
-        {/*            <Typography variant={"h5"} textAlign={"center"}>*/}
-        {/*                {`insured`}*/}
-        {/*            </Typography>*/}
-        {/*        </Container>*/}
-        {/*    </Stack>*/}
-        {/*</CardContent>*/}
-    </div>
     </Link>
 }
 
@@ -259,7 +241,6 @@ export default function Home() {
                     <PolicyCard policy={generatePolicy()}/>
                     <PolicyCard policy={generatePolicy()}/>
                 </div>
-
             </div>
         </div>
     )

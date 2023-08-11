@@ -52,7 +52,7 @@ export default function Home() {
     console.log("test")
     generatePolicy()
     const committee = generateOracleCommittee()
-    const providers = committee.providers.map(p => generateDataProvider(p))
+    const providers = [generateDataProvider("USDC"), generateDataProvider("USDT"), generateDataProvider("DAI")]
     const startColor = hexToRgb("#FF0000");
     const endColor = hexToRgb("#00FF00");
     const steps = 3; //TODO comes from policy
@@ -78,7 +78,7 @@ export default function Home() {
                 </p>
 
                 <div className={"grid grid-cols-3 gap-8"}>
-                    {committee.providers.map((provider) => {
+                    {providers.map((provider) => {
                         return (
                             <div className={"grid-cols-1"}>
                             <ProviderCard provider={provider}/>

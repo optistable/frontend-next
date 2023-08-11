@@ -47,6 +47,7 @@ export const generateDataProvider = (symbol: "USDC" | "USDT" | "DAI"): DataProvi
         address: `0x${generateHexString(32)}`,
         lastBlockNum: getRandomBigInt(7),
         depegTolerance: 5n,
+        depegged: getRandomBool(),
         minBlocksToSwitchStatus: 5,
         switchStatusCounter: getRandomNumber(2, 5), //the current number of sequential depegs
         onChain: getRandomBool(),

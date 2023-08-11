@@ -26,16 +26,18 @@ export default function RootLayout({
         <header>
             <nav
                 className="
-          flex flex-wrap
-          items-center
-          justify-between
-          w-full
-          {/*md:py-0*/}
-          px-4
-          py-4
-          text-lg text-gray-700
-          bg-black
-        "
+                    flex
+                    flex-wrap
+                    items-center
+                    justify-between
+                    w-full
+                    {/*md:py-0*/}
+                    px-4
+                    py-4
+                    text-lg
+                    text-gray-700
+                    bg-black
+                "
             >
                 {/*<a href="#">*/}
                     <TitleText/>
