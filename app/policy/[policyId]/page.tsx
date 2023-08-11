@@ -1,6 +1,7 @@
 import {generateDataProvider, generateOracleCommittee, generatePolicy} from "@/app/generators";
-import {DataProvider} from "@/app/page";
 import Image from "next/image";
+import {DataProvider} from "@/app/common";
+import {useEffect} from "react";
 
 
 const hexToRgb = (hex: string) => {
@@ -37,6 +38,15 @@ const transitionColors = (startColor: [number, number, number], endColor: [numbe
 }
 
 const ProviderCard = ({provider}: { provider: DataProvider }) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            //TODO @ferrodri, re-fetch a provider's data here
+        }
+        const interval = setInterval(fetchData, 5000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [])
     return (<div className={"card w-3xl"}>
     <div className={" justify-between"}>
         <Image src={provider.logo} height={80} alt={"logo"}/>
@@ -48,14 +58,17 @@ const ProviderCard = ({provider}: { provider: DataProvider }) => {
     </div>
     )
 }
-export default function Home() {
-    console.log("test")
-    generatePolicy()
+export default function Home({params}: {params: {policyId: string}}){
+
+    // TODO @ferrodri, fetch policy, policy's oracle committee, and policy's data providers here
+    // params.policyId for policy
+    const policy = generatePolicy()
     const committee = generateOracleCommittee()
     const providers = [generateDataProvider("USDC"), generateDataProvider("USDT"), generateDataProvider("DAI")]
     const startColor = hexToRgb("#FF0000");
     const endColor = hexToRgb("#00FF00");
     const steps = 3; //TODO comes from policy
+
 
     console.log(`mix(#FF0000, #00FF00, ${(committee.providersReportingDepegs / committee.providers.length) * 100}%)`)
     console.log("TEST")

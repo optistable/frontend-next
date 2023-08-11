@@ -1,11 +1,36 @@
-$primary-color: #F0B90B;
+//$primary-color: #F0B90B;
+$primary-color: #09FBD3;
+$primary-contrast-color: #000;
+$secondary-color: #932cf2;
+$secondary-contrast-color: #fff;
 $optimism-red: #FF0420;
 $usdc-color: #3E73C4;
 $usdt-color: #6AAD97;
 $dai-color: #F5AC37;
-$background-color: #0D0B1C;
+//$background-color: #0D0B1C;
+$background-color: #000;
 $font-stack: Poppins,Helvetica,Arial,sans-serif;
 
+.bg-primary {
+    background-color: $primary-color;
+}
+.bg-secondary {
+    background-color: $secondary-color;
+}
+.color-primary {
+    color: $primary-color;
+}
+.color-secondary {
+    color: $secondary-color;
+}
+
+.nav-link{
+  border-left: $secondary-contrast-color 1px solid;
+  border-right: $secondary-contrast-color 1px solid;
+  height: 100%;
+  @apply text-2xl;
+
+}
 html {
   font-family: $font-stack;
   color: white;
@@ -19,12 +44,13 @@ body {
 .title{
   font-family: $font-stack;
   color: white;
-  @apply text-2xl;
+  @apply text-4xl;
 }
 .card-header{
   @apply text-2xl;
   text-transform: capitalize;
 }
+
 .amount-bar{
   @apply h-8;
   background-color: white; //You should never see this color
@@ -64,12 +90,11 @@ body {
   @apply rounded-2xl;
   @apply px-16;
   @apply py-4;
-  @apply hover:bg-amber-500;
-  @apply hover:text-black;
-  @apply hover:shadow-lg;
   @apply transition-all;
   @apply duration-200;
   @apply ease-in-out;
+
+  @apply hover:shadow-lg;
   @apply focus:outline-none;
   @apply focus:ring-2;
   @apply focus:ring-amber-600;
@@ -77,6 +102,9 @@ body {
   @apply focus:ring-offset-2;
   @apply focus:ring-offset-white;
   //@apply focus:ring-offset-opacity-50;
+}
+.contained-button:hover{
+    background-color: #d7fff6;
 }
 .outlined-button{
 
@@ -89,6 +117,36 @@ body {
   flex-shrink: 0;
   background-color: #001332;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+//input[type=text]{
+.test-input{
+  background-color: #062b55;
+  border-bottom: 1px solid #0c54a7;
+  @apply focus:border-b-white;
+  @apply pt-2;
+  @apply pb-2;
+  @apply pl-4;
+  @apply text-2xl;
+}
+.test-input:focus{
+  border: none!important;
+}
+
+.action-card {
+  @apply transition-all;
+  @apply duration-200;
+  @apply ease-in-out;
+  @apply hover:shadow-lg;
+  @apply focus:outline-none;
+  @apply focus:ring-2;
+  @apply focus:ring-amber-600;
+  @apply focus:ring-opacity-50;
+  @apply focus:ring-offset-2;
+  @apply focus:ring-offset-white;
+}
+.action-card:hover {
+  background-color: #092d64;
+
 }
 
 .debug-red{

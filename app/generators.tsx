@@ -1,4 +1,11 @@
-import {DataProvider, dataProviderToLogo, dataProviderToTitle, OracleCommittee, Policy, stablecoins} from "./page";
+import {
+    DataProvider,
+    dataProviderToLogo,
+    dataProviderToTitle,
+    OracleCommittee,
+    Policy,
+    stablecoins
+} from "@/app/common";
 
 /*
 These were generators written so we could draft out the frontend.
