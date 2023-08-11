@@ -1,4 +1,4 @@
-import {DataProvider, OracleCommittee, Policy, stablecoins} from "./page";
+import {DataProvider, dataProviderToLogo, dataProviderToTitle, OracleCommittee, Policy, stablecoins} from "./page";
 
 /*
 These were generators written so we could draft out the frontend.
@@ -26,6 +26,7 @@ export const generateOracleCommittee = (): OracleCommittee => {
         generateDataProvider("USDT"),
         generateDataProvider("DAI"),
     ]
+    console.log( getRandomNumber(0, providers.length))
     return {
         startingBlock: startingBlock,
         endingBlock: startingBlock + 1000n,
@@ -35,10 +36,14 @@ export const generateOracleCommittee = (): OracleCommittee => {
     }
 }
 
+
 export const generateDataProvider = (symbol: "USDC" | "USDT" | "DAI"): DataProvider => {
-    const oracleTypes = ["chainlink-price-feed", "chainlink-base-ccip-price-feed", "coingecko"]
+    const oracleTypes = ["chainlink-price-feed", "chainlink-base-ccip-price-feed", "coingecko", "hyperlane", "layerzero"]
+    const oracleType = getRandomElementFromArray(oracleTypes)
     return {
         symbol: symbol,
+        logo: dataProviderToLogo(oracleType),
+        title: dataProviderToTitle(oracleType),
         address: `0x${generateHexString(32)}`,
         lastBlockNum: getRandomBigInt(7),
         depegTolerance: 5n,
@@ -48,7 +53,7 @@ export const generateDataProvider = (symbol: "USDC" | "USDT" | "DAI"): DataProvi
         decimals: getRandomNumber(8, 12),
         stableValue: 10n ** 18n,
         lastObservation: getRandomBigInt(7),
-        oracleType: getRandomElementFromArray(oracleTypes) //this is actually bytes32
+        oracleType: oracleType //this is actually bytes32
     }
 }
 export const generateUniqueKeyPairs = (obj: Object) => {

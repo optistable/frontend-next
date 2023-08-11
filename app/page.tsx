@@ -1,12 +1,22 @@
 import {AddressLike} from "ethers";
-import {ReactElement} from "react";
-import {generatePolicy, getRandomBigInt} from "@/app/generators";
+import React, {ReactElement} from "react";
+import {generatePolicy, getRandomBigInt, getRandomElementFromArray} from "@/app/generators";
 import USDCIcon from "../public/usdc.svg";
 import USDTIcon from "../public/usdt.svg";
 import DAIIcon from "../public/dai-logo.svg";
 import MaterialSyncAltIcon from "../public/material-sync-alt.svg";
-import Image from "next/image";
-
+import Image, {StaticImageData} from "next/image";
+import Link from "next/link";
+import ChainlinkLogo from "../public/chainlink-logo.svg";
+import CoingeckoLogo from "../public/coingecko.png";
+import BaseLogo from "../public/base-logo.jpeg";
+import LayerZeroLogo from "../public/layer-zero.svg";
+import TheGraphLogo from "../public/the-graph-logo.svg";
+import WaldoLogo from "../public/waldo.png";
+import CarmenLogo from "../public/carmen-sandiego.png";
+import RiddlerLogo from "../public/riddler.png";
+import GarfieldLogo from "../public/garfield.png";
+import HyperlaneLogo from "../public/hyperlane.png";
 export type Policy = {
     address: AddressLike,
     insuredTokenAddress: AddressLike,
@@ -26,6 +36,8 @@ export type OracleCommittee = {
 export type DataProvider = {
     symbol: string,
     address: AddressLike,
+    logo: StaticImageData,
+    title: ReactElement,
     lastBlockNum: bigint,
     depegTolerance: bigint,
     minBlocksToSwitchStatus: number,
@@ -34,6 +46,7 @@ export type DataProvider = {
     decimals: number,
     stableValue: bigint,
     lastObservation: bigint,
+    depegged: boolean,
     oracleType: string //this is actually bytes32
 }
 
@@ -47,6 +60,42 @@ type Stablecoin = {
 
 // TODO: Make this a part of the theme
 export const OPTIMISM_RED = "#FF0420";
+export const dataProviderToLogo = (symbol: string): StaticImageData => {
+    switch (symbol) {
+        case "chainlink-price-feed":
+            return ChainlinkLogo
+        case "chainlink-base-ccip-price-feed":
+            return BaseLogo
+        case "coingecko":
+            return CoingeckoLogo
+        case "hyperlane":
+            return HyperlaneLogo
+        case "layerzero":
+            return LayerZeroLogo
+        case "the-graph":
+            return TheGraphLogo
+        default:
+            return getRandomElementFromArray([WaldoLogo, CarmenLogo, RiddlerLogo, GarfieldLogo])
+    }
+}
+export const dataProviderToTitle = (symbol: string): ReactElement => {
+    switch (symbol) {
+        case "chainlink-price-feed":
+            return <Link href={"https://docs.chain.link/data-feeds"}>Chainlink Data Feeds</Link>
+        case "chainlink-base-ccip-price-feed":
+            return <div className={"flex"}><Link href={"https://docs.chain.link/ccip"}>Chainlink CCIP</Link> <Link href={"https://docs.base.org/"}> on Base </Link></div>
+        case "coingecko":
+            return <Link href={"https://www.coingecko.com/en"}>Coingecko</Link>
+        case "hyperlane":
+            return <Link href={"https://www.hyperlane.xyz/"}>Hyperlane</Link>
+        case "layerzero":
+            return <Link href={"https://www.layerzero.network/"}>LayerZero</Link>
+        case "the-graph":
+            return <Link href={"https://thegraph.com/"}>The Graph</Link>
+        default:
+            return <Link href={"https://www.youtube.com/watch?v=oHg5SJYRHA0"}>Unknown</Link>
+    }
+}
 
 export const stablecoins: {
     [key: string]: Stablecoin
@@ -143,13 +192,14 @@ const InsuranceCollateralCard: React.FC<{
 const PolicyCard: React.FC<{
     policy: Policy
 }> = ({policy}) => {
-    return <div className={"card max-w-md justify-center space-y-4"} key={policy.address.toString()}>
+    return <Link href={`/policy/${policy.address.toString()}`}>
+    <div className={"card max-w-md justify-center space-y-4"} key={policy.address.toString()}>
         <div className={"flex justify-center space-x-4"}>
             <div>
                 {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
             </div>
             <div className={"flex items-center"} style={{color: "#FFF"}}>
-                <Image src={MaterialSyncAltIcon} height={80} color={"white"} className={"material-icons"}/>
+                <Image src={MaterialSyncAltIcon} alt="sync" height={80} color={"white"} className={"material-icons"}/>
             </div>
             <div>
                 {stablecoins[policy.insuredTokenAddress.toString()].icon(80, 0)}
@@ -181,6 +231,7 @@ const PolicyCard: React.FC<{
         {/*    </Stack>*/}
         {/*</CardContent>*/}
     </div>
+    </Link>
 }
 
 export default function Home() {
