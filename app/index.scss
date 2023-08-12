@@ -1,7 +1,7 @@
 //$primary-color: #F0B90B;
 $primary-color: #09FBD3;
 $primary-contrast-color: #000;
-$secondary-color: #932cf2;
+$secondary-color: #4f0990;
 $secondary-contrast-color: #fff;
 $optimism-red: #FF0420;
 $usdc-color: #3E73C4;
@@ -24,6 +24,11 @@ $font-stack: Poppins,Helvetica,Arial,sans-serif;
     color: $secondary-color;
 }
 
+a{
+color: #d191d9;
+
+}
+
 .nav-link{
   border-left: $secondary-contrast-color 1px solid;
   border-right: $secondary-contrast-color 1px solid;
@@ -44,7 +49,7 @@ body {
 .title{
   font-family: $font-stack;
   color: white;
-  @apply text-4xl;
+  @apply text-2xl;
 }
 .card-header{
   @apply text-2xl;

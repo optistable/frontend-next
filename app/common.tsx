@@ -83,8 +83,11 @@ export const dataProviderToTitle = (symbol: string): ReactElement => {
         case "chainlink-price-feed":
             return <Link href={"https://docs.chain.link/data-feeds"}>Chainlink Data Feeds</Link>
         case "chainlink-base-ccip-price-feed":
-            return <div className={"flex"}><Link href={"https://docs.chain.link/ccip"}>Chainlink CCIP</Link> <Link
-                href={"https://docs.base.org/"}> on Base </Link></div>
+            return <div className={"flex"}>
+                <Link href={"https://docs.chain.link/ccip"}>Chainlink CCIP</Link>
+                <p>&nbsp;</p>
+                <Link className={"flex"} href={"https://docs.base.org/"}>on Base</Link>
+            </div>
         case "coingecko":
             return <Link href={"https://www.coingecko.com/en"}>Coingecko</Link>
         case "hyperlane":

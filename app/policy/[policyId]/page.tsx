@@ -1,3 +1,4 @@
+'use client'
 import {generateDataProvider, generateOracleCommittee, generatePolicy} from "@/app/generators";
 import Image from "next/image";
 import {DataProvider} from "@/app/common";
@@ -47,13 +48,16 @@ const ProviderCard = ({provider}: { provider: DataProvider }) => {
             clearInterval(interval);
         };
     }, [])
-    return (<div className={"card w-3xl"}>
-    <div className={" justify-between"}>
-        <Image src={provider.logo} height={80} alt={"logo"}/>
+    return (<div className={"card w-3xl h-full"}>
+    <div className={" justify-between text-center"}>
+
+        <Image className={"m-auto"} src={provider.logo} height={80} alt={"logo"}/>
         <div className={"text-xl"}>{provider.title}</div>
-        <div className={"text-xl"}>{provider.lastObservation?.toLocaleString()}</div>
+        <div className={"text-xl"}>${provider.lastObservation?.toLocaleString()}</div>
         {/*TODO color hint when depegged vs depegged*/}
-        <div className={"text-xl"}>{provider.depegged ? "Not Depegged" : "Depegged"}</div>
+        <div className={"text-xl"} style={{color: provider.depegged ? "#ffa28a" : "#a3ff90"  }}>
+            {provider.depegged ? "Depegged" : "Not Depegged"}
+        </div>
     </div>
     </div>
     )
@@ -74,14 +78,6 @@ export default function Home({params}: {params: {policyId: string}}){
     console.log("TEST")
     return (
         <div className={"grid grid-cols-6 gap-8"}>
-            <div className={"card col-span-1 mt-8 space-y-8"}>
-                <div className={"contained-button"}>
-                    Dashboard
-                </div>
-                <div className={"contained-button"}>
-                    Pools
-                </div>
-            </div>
             <div className={"col-span-5 space-y-8"}>
                 <p className={"text-5xl mt-16"} >Committee</p>
                 <p className={"text-3xl mt-16"} style={{

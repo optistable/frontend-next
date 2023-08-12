@@ -2,7 +2,6 @@
 
 import './globals.css'
 import "./index.scss"
-import type {Metadata} from 'next'
 import {Poppins} from "next/font/google";
 import Link from "next/link";
 import OptistableLogo from "../public/logo.svg"
@@ -65,45 +64,25 @@ export default function RootLayout({
                 {/*    bg-secondary*/}
                 {/*"*/}
                 {/*>*/}
-                <AppBar position={"static"}>
+                <AppBar position={"static"} className={"bg-secondary"}>
                     <Container>
-
-                    <Toolbar>
-                        <Link href="/" className={"flex space-x-4"}>
-                            <Image src={OptistableLogo} alt="Optistable" height={60}/>
-                            <div className={"flex title items-center"} style={{
-                                textTransform: "uppercase",
-                            }}>
-                                <p className={"optimism-color"}>OP</p>
-                                <p className={"text-white"}>TISTABLE</p>
-                            </div>
-                        </Link>
-                        <div className={"nav-link flex"} style={{border: "1px solid red", height: "100%"}}>
-                            <Link href={"/subscribe"}>
-                                Get Insured
+                        <Toolbar className={"flex space-x-4 h-1 border-l-2"}>
+                            <Link href="/" className={"flex space-x-1.5 h-full ml-0"}>
+                                <Image src={OptistableLogo} alt="Optistable" height={45}/>
+                                <div className={"flex title items-center"} style={{
+                                    textTransform: "uppercase",
+                                }}>
+                                    <p className={"optimism-color font-bold"}>OP</p>
+                                    <p className={"text-white font-bold"}>TISTABLE</p>
+                                </div>
                             </Link>
-                        </div>
+                            <div className={"nav-link flex items-center p-2"} style={{height: "100%"}}>
+                                <Link href={"/subscribe"}>
+                                    Get Insured
+                                </Link>
+                            </div>
 
-                        {/* TODO @ferrodri, connect to wallet button here*/}
-                        {/*{account &&*/}
-                        {/*    <img style={{maxWidth: 40, marginLeft: "auto"}}*/}
-                        {/*         src={jazziconImageString(account)}*/}
-                        {/*         onError={(e) => fallbackToJazzicon(e, account || "")}/>}*/}
-                        {/*<Tooltip title={tooltipText} placement={"bottom"} disableHoverListener={tooltipText === ""}>*/}
-                        {/*    {isActive ?*/}
-                        {/*        <Button variant={"contained"} color={"secondary"}*/}
-                        {/*                sx={{marginLeft: 1, textTransform: "none"}}*/}
-                        {/*                onClick={disconnectWallet}*/}
-                        {/*                startIcon={connectIcon}>*/}
-                        {/*            {account?.slice(0, 6) + "..." + account?.slice(account.length - 4, account.length)}*/}
-                        {/*        </Button> : <Button variant={"contained"}  style={{marginLeft: "auto"}}*/}
-                        {/*                            onClick={connectWallet}*/}
-                        {/*                            startIcon={connectIcon}>*/}
-                        {/*            Connect*/}
-                        {/*        </Button>*/}
-                        {/*    }*/}
-                        {/*</Tooltip>*/}
-                    </Toolbar>
+                        </Toolbar>
                     </Container>
                 </AppBar>
                 {/*</nav>*/}
